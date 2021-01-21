@@ -1,21 +1,41 @@
 package delta;
+
+import java.io.*;
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class Delta {
-static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    static JList newList;
+    BufferedWriter bw;
+    static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+   
+
     public static void main(String[] args) {
-        
+//        try{
+//            FileWriter newFW = new FileWriter("New Materials.txt");
+//            FileWriter testFW = new FileWriter("Test Materials.txt");
+//            FileWriter readyFW = new FileWriter("Ready Materials.txt");
+//            
+//            BufferedWriter bw = new BufferedWriter(newFW);
+//            
+//            
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//        }
         JFrame appFrame = new JFrame("Hello");
+        
+        DefaultListModel newMat = new DefaultListModel();
         
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        JPanel panelNew = new JPanel();
+        JPanel panelMain = new JPanel();
         JPanel panelTest = new JPanel();
         JPanel panelReady = new JPanel();
         JPanel panelMenu = new JPanel();
-        panelNew.setBackground(Color.red);
+        panelMain.setBackground(Color.white);
         panelTest.setBackground(Color.yellow);
         panelReady.setBackground(Color.blue);
         panelMenu.setBackground(Color.BLACK);
@@ -34,15 +54,18 @@ static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         gbc_for_container.gridx = 1;
         gbc_for_container.ipadx = (screenSize.width - (screenSize.width/8));
         gbc_for_container.ipady = screenSize.height - screenSize.height/11;
-        c.add(panelNew,gbc_for_container);
-        
+        c.add(panelMain,gbc_for_container);
         JButton newButton = new JButton("NEW");
         JButton testButton = new JButton("TEST");
         JButton readyButton = new JButton("READY");
         JPanel newPanel = new JPanel();
         JPanel testPanel = new JPanel();
         JPanel readyPanel = new JPanel();
+        newPanel.setBackground(Color.black);
+        testPanel.setBackground(Color.black);
+        readyPanel.setBackground(Color.black);
         panelMenu.setLayout(new GridBagLayout());
+        panelMain.setLayout(new BorderLayout());
         GridBagConstraints gbc_for_menu_panel = new GridBagConstraints(); 
         gbc_for_menu_panel.insets = new Insets(5,1,5,1);
         gbc_for_menu_panel.gridx = 0;
@@ -62,25 +85,45 @@ static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         newPanel.add(newButton,BorderLayout.CENTER);
         testPanel.add(testButton,BorderLayout.CENTER);
         readyPanel.add(readyButton,BorderLayout.CENTER);
-
+        
+        
+        newList = new JList(newMat);
+        newList.setModel(newMat);
         newButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                panelNew.setBackground(Color.red);
+                panelMain.setBackground(Color.red);
             }
         });
         
         testButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                panelNew.setBackground(Color.green);
+                panelMain.setBackground(Color.green);
             }
         });
         
         readyButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                panelNew.setBackground(Color.orange);
+                panelMain.setBackground(Color.orange);
             }
         });
+        panelMain.add(newList);
         
+        
+        JButton addNew = new JButton("Add");
+        JButton deleteNew = new JButton("Delete");
+        addNew.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                newMat.addElement("Hello" + newMat.size());
+            }
+        });
+        deleteNew.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                int index_to_delete = newList.getSelectedIndex();
+                newMat.removeElementAt(index_to_delete);
+            }
+        });
+        panelMain.add(addNew,BorderLayout.NORTH);
+        panelMain.add(deleteNew,BorderLayout.SOUTH);
         appFrame.setVisible(true);
     }
     
